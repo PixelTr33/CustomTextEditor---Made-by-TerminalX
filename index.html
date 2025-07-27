@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Custom Text Editor</title>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  .toolbar {
+    padding: 10px;
+    background: #f1f1f1;
+    display: flex;
+  }
+  .editor {
+    border: 1px solid #ccc;
+    height: 90%;
+    padding: 10px;
+  }
+  button {
+    cursor: pointer;
+  }
+  select {
+    cursor: pointer;
+  }
+</style>
+<script>
+  function format(command, value) {
+    document.execCommand(command, false, value);
+  }
+</script>
+</head>
+<body>
+  <div class='toolbar'>
+    <button onclick='format(\"format("bold")'>Bold</button>
+    <button onclick='format("italic")'>Italic</button>
+    <button onclick='format("underline")'>Underline</button>
+    <select onchange='format("foreColor", this.value)'>
+      <option value='black'>Black</option>
+      <option value='red'>Red</option>
+      <option value='green'>Green</option>
+      <option value='blue'>Blue</option>
+    </select>
+    <select onchange='format("backColor", this.value)'>
+      <option value='white'>White</option>
+      <option value='yellow'>Yellow</option>
+      <option value='cyan'>Cyan</option>
+      <option value='magenta'>Magenta</option>
+    </select>
+    <select onchange='format("fontName", this.value)'>
+      <option value='Arial'>Arial</option>
+      <option value='Comic Sans MS'>Comic Sans MS</option>
+      <option value='Courier New'>Courier New</option>
+      <option value='Georgia'>Georgia</option>
+      <option value='Tahoma'>Tahoma</option>
+      <option value='Times New Roman'>Times New Roman</option>
+      <option value='Verdana'>Verdana</option>
+    </select>
+  </div>
+  <div class='editor' contenteditable='true'></div>
+</body>
+</html><select onchange='format("fontSize", this.value)'>
+      <option value='1'>Very Small</option>
+      <option value='2'>Small</option>
+      <option value='3'>Normal</option>
+      <option value='4'>Large</option>
+      <option value='5'>Very Large</option>
+    </select>
+    <button onclick='toggleDarkMode()'>Toggle Dark Mode</button>
+    <button onclick="saveTextAsFile()">Save as .txt</button>
+    <button onclick='format("undo")'>Undo</button>
+    <button onclick='format("redo")'>Redo</button>
+    <script>
+      function toggleDarkMode() {
+        var body = document.body;
+        body.classList.toggle("dark-mode");
+        var editor = document.querySelector('.editor');
+        var currentBackground = window.getComputedStyle(editor).backgroundColor;
+        editor.style.backgroundColor = currentBackground === 'rgb(255, 255, 255)' ? 'rgb(41, 41, 41)' : 'rgb(255, 255, 255)';
+        editor.style.color = currentBackground === 'rgb(255, 255, 255)' ? 'white' : 'black';
+      }
+
+      function saveTextAsFile() {
+        var textToWrite = document.querySelector('.editor').innerText;
+        var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
+        var fileNameToSaveAs = "myNewFile.txt";
+
+        var downloadLink = document.createElement("a");
+        downloadLink.download = fileNameToSaveAs;
+        downloadLink.innerHTML = "Download File";
+        if (window.webkitURL != null) {
+          downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+        } else {
+          downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+          downloadLink.onclick = destroyClickedElement;
+          downloadLink.style.display = "none";
+          document.body.appendChild(downloadLink);
+        }
+
+        downloadLink.click();
+      }
+
+      function destroyClickedElement(event) {
+        document.body.removeChild(event.target);
+      }
+    </script>
+    <style>
+      .dark-mode {
+        background-color: #292929;
+        color: white;
+      }
+    </style>
+  </div>
+</body>
+</html>
